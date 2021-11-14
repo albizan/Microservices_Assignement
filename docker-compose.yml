@@ -1,0 +1,18 @@
+version: "3.7"
+
+# SERVICES
+services:
+  # RELATIONAL DATABASE
+  postgres_db:
+    image: postgres:latest
+    container_name: book-database
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./utils/init-book.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
