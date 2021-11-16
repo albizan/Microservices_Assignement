@@ -1,5 +1,3 @@
-CREATE DATABASE "book" OWNER postgres;
-
 \connect book
 
 CREATE TABLE "book"
