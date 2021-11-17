@@ -1,6 +1,12 @@
 const fastify = require("fastify")({ logger: false });
 const { v4: uuidv4 } = require("uuid");
 
+if (process.env.NODE_ENV !== "production") {
+  // Load env variables from local .env file
+  console.log("Loading local env vars...");
+  require("dotenv").config();
+}
+
 const knex = require("knex")({
   client: "pg",
   connection: {
@@ -103,10 +109,10 @@ fastify.delete("/book/:id", async (request, reply) => {
 // Start the server!
 const start = async () => {
   try {
-    console.log("Starting server on port...", process.env.SERVER_PORT);
+    console.log("Starting server on port", process.env.SERVER_PORT);
     await fastify.listen({
       port: process.env.SERVER_PORT,
-      host: "0.0.0.0",
+      host: "0.0.0.0", // Default is 127.0.0.1, to be avoided because it refuses connections from other containers or from the main host
     });
   } catch (err) {
     fastify.log.error(err);
