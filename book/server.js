@@ -4,11 +4,11 @@ const { v4: uuidv4 } = require("uuid");
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: "localhost",
-    port: 5432,
-    user: "postgres",
-    password: "postgres",
-    database: "book",
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
   },
 });
 
@@ -103,7 +103,11 @@ fastify.delete("/book/:id", async (request, reply) => {
 // Start the server!
 const start = async () => {
   try {
-    await fastify.listen(3000);
+    console.log("Starting server on port...", process.env.SERVER_PORT);
+    await fastify.listen({
+      port: process.env.SERVER_PORT,
+      host: "0.0.0.0",
+    });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
