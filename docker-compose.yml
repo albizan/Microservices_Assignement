@@ -28,6 +28,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: book
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092,kafka2:9092,kafka3:9092
     container_name: book-ms
     ports:
       - "8081:8081"
