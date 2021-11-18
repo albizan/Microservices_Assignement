@@ -1,0 +1,1 @@
+docker-compose up -d zookeeper kafka kafka2 kafka3 postgres_db
