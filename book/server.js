@@ -1,11 +1,18 @@
 const fastify = require("fastify")({ logger: false });
 const { v4: uuidv4 } = require("uuid");
+const { Kafka } = require("kafkajs");
 
 if (process.env.NODE_ENV !== "production") {
   // Load env variables from local .env file
   console.log("Loading local env vars...");
   require("dotenv").config();
 }
+
+const kafka = new Kafka({
+  clientId: "book-ms",
+  brokers: process.env.KAFKA_BOOTSTRAP_SERVERS.split(","),
+});
+const producer = kafka.producer();
 
 const knex = require("knex")({
   client: "pg",
@@ -34,9 +41,22 @@ const bookSchema = {
 // Declare routes
 fastify.get("/book", async (request, reply) => {
   knex("book")
-    .then((rows) => {
+    .then(async (rows) => {
       reply.statusCode = 200;
       reply.send(rows);
+
+      try {
+        await producer.connect();
+        console.log("Connected to kafka");
+        await producer.send({
+          topic: "book",
+          messages: [
+            { value: `${rows.length} books retreived with a GET /book` },
+          ],
+        });
+      } catch (error) {
+        console.error(error);
+      }
     })
     .catch((err) => {
       reply.sendCode = 500;
