@@ -7,7 +7,7 @@ WORKDIR /usr/src/server
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci --only=production
 
 # Copy sorce code
 COPY . .
