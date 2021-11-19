@@ -37,4 +37,4 @@ class Kafka {
   };
 }
 
-module.exports = Kafka;
+module.exports = new Kafka();
