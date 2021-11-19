@@ -1,22 +1,12 @@
 const fastify = require("fastify")({ logger: false });
 const { v4: uuidv4 } = require("uuid");
-const { Kafka } = require("kafkajs");
+const Kafka = require("./kafka");
 
 if (process.env.NODE_ENV !== "production") {
   // Load env variables from local .env file
   console.log("Loading local env vars...");
   require("dotenv").config();
 }
-
-const kafka = new Kafka({
-  clientId: "book-ms",
-  brokers: process.env.KAFKA_BOOTSTRAP_SERVERS.split(","),
-});
-const admin = kafka.admin();
-
-// Create topic
-admin.createTopics({ topics: [{ topic: "book-ms-2" }] });
-const producer = kafka.producer();
 
 const knex = require("knex")({
   client: "pg",
@@ -132,6 +122,12 @@ fastify.delete("/book/:id", async (request, reply) => {
 
 // Start the server!
 const start = async () => {
+  // Kafka configuration
+  console.log("Connecting to kafka brokers...");
+  const kafka = new Kafka();
+  await kafka.connect();
+  kafka.createTopic(process.env.KAFKA_TOPIC_NAME);
+
   try {
     console.log("Starting server on port", process.env.SERVER_PORT);
     await fastify.listen({
