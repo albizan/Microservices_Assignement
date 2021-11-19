@@ -1,4 +1,4 @@
-from node:latest
+FROM node:latest
 
 # Create server directory
 WORKDIR /usr/src/server
