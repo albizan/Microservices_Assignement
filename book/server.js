@@ -12,6 +12,10 @@ const kafka = new Kafka({
   clientId: "book-ms",
   brokers: process.env.KAFKA_BOOTSTRAP_SERVERS.split(","),
 });
+const admin = kafka.admin();
+
+// Create topic
+admin.createTopics({ topics: [{ topic: "book-ms-2" }] });
 const producer = kafka.producer();
 
 const knex = require("knex")({
