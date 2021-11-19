@@ -1,6 +1,6 @@
 const fastify = require("fastify")({ logger: false });
 const { v4: uuidv4 } = require("uuid");
-const Kafka = require("./kafka");
+const kafka = require("./kafka");
 
 if (process.env.NODE_ENV !== "production") {
   // Load env variables from local .env file
@@ -40,10 +40,10 @@ fastify.get("/book", async (request, reply) => {
       reply.send(rows);
 
       try {
-        await producer.connect();
+        await kafka.producer.connect();
         console.log("Connected to kafka");
-        await producer.send({
-          topic: "book",
+        await kafka.producer.send({
+          topic: process.env.KAFKA_TOPIC_NAME,
           messages: [
             { value: `${rows.length} books retreived with a GET /book` },
           ],
@@ -124,7 +124,6 @@ fastify.delete("/book/:id", async (request, reply) => {
 const start = async () => {
   // Kafka configuration
   console.log("Connecting to kafka brokers...");
-  const kafka = new Kafka();
   await kafka.connect();
   kafka.createTopic(process.env.KAFKA_TOPIC_NAME);
 
