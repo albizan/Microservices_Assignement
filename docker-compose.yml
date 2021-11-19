@@ -19,7 +19,7 @@ services:
 
   # Book Microservice
   book-ms:
-    image: albizan/book-ms
+    image: book-ms
     environment:
       NODE_ENV: production
       SERVER_PORT: 8081
@@ -29,11 +29,16 @@ services:
       DB_PASSWORD: postgres
       DB_DATABASE: book
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092,kafka2:9092,kafka3:9092
+      KAFKA_TOPIC_NAME: book-ms
     container_name: book-ms
     ports:
       - "8081:8081"
     depends_on:
       - postgres_db
+      - zookeeper
+      - kafka
+      - kafka2
+      - kafka3
 
   # Kafka config
   zookeeper:
