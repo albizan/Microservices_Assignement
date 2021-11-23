@@ -40,6 +40,38 @@ services:
       - kafka2
       - kafka3
 
+  # MongoDB
+  mongo_db:
+    image: mongo:latest
+    container_name: customer-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: customer_db
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb_data:/data/db
+
+  # Customer Microservice
+  customer-ms:
+    image: customer-ms
+    environment:
+      NODE_ENV: development
+      SERVER_PORT: 8082
+      MONGO_URI: mongodb://root:root@mongo_db:27017
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092,kafka2:9092,kafka3:9092
+      KAFKA_TOPIC_NAME: customer-ms
+    container_name: customer-ms
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongo_db
+      - zookeeper
+      - kafka
+      - kafka2
+      - kafka3
+
   # Kafka config
   zookeeper:
     image: confluentinc/cp-zookeeper
