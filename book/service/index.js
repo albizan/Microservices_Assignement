@@ -1,5 +1,6 @@
 const db = require("../database");
 const { v4: uuidv4 } = require("uuid");
+const logger = require("../logger");
 
 const getBooks = async () => {
   try {
@@ -13,6 +14,10 @@ const getBooks = async () => {
 const getBook = async (id) => {
   try {
     const book = await db.select("*").from("book").where({ id }).first();
+    logger.info("Requested book with id: " + id);
+    if (!book) {
+      logger.info("Book with id " + id + " does not exist");
+    }
     return book;
   } catch (error) {
     console.error(error);
@@ -26,6 +31,7 @@ const createBook = async (bookDTO) => {
       ...bookDTO,
     };
     await db.insert(newBook).into("book");
+    logger.info("Created book with id: " + newBook.id);
     return newBook;
   } catch (error) {
     console.error(error);
@@ -35,6 +41,7 @@ const createBook = async (bookDTO) => {
 const updateBook = async (id, updateBookDTO) => {
   try {
     const affectedRows = await db("book").where({ id }).update(updateBookDTO);
+    logger.info("Updated book with id: " + id);
     return affectedRows;
   } catch (error) {
     console.error(error);
@@ -44,6 +51,7 @@ const updateBook = async (id, updateBookDTO) => {
 const deleteBook = async (id) => {
   try {
     await db("book").where({ id }).del();
+    logger.info("Deleted book with id: " + id);
   } catch (error) {
     console.error(error);
   }
