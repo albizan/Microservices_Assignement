@@ -1,4 +1,4 @@
-const { getBooks, getBook } = require("../service");
+const { getBooks, getBook, createBook, updateBook, deleteBook } = require("../service");
 const kafka = require("../kafka");
 
 const getBooksController = async (_, reply) => {
@@ -39,7 +39,45 @@ const getBookController = async (request, reply) => {
   }
 };
 
+const postBookController = async (request, reply) => {
+  try {
+    const result = await createBook(request.body);
+    reply.statusCode = 201;
+    reply.send(result);
+  } catch (error) {
+    reply.statusCode = 500;
+    reply.send();
+  }
+};
+
+const updateBookController = async (request, reply) => {
+  try {
+    const { id } = request.params;
+    const affectedRows = await updateBook(id, request.body);
+    reply.statusCode = 200;
+    reply.send({ affectedRows: affectedRows });
+  } catch (error) {
+    reply.statusCode = 500;
+    reply.send();
+  }
+};
+
+const deleteBookController = async (request, reply) => {
+  try {
+    const { id } = request.params;
+    await deleteBook(id);
+    reply.statusCode = 204;
+    reply.send();
+  } catch (error) {
+    reply.statusCode = 500;
+    reply.send();
+  }
+};
+
 module.exports = {
   getBooksController,
   getBookController,
+  postBookController,
+  updateBookController,
+  deleteBookController,
 };
