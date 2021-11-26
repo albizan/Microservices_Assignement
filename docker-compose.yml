@@ -29,8 +29,8 @@ services:
       DB_PASSWORD: postgres
       DB_DATABASE: book
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092,kafka2:9092,kafka3:9092
-      KAFKA_TOPIC_NAME: book-ms
-    container_name: notify
+      KAFKA_TOPIC_NAME: notify
+    container_name: book-ms
     ports:
       - "8081:8081"
     depends_on:
