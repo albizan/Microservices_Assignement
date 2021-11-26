@@ -19,20 +19,17 @@ class Kafka {
   createTopic = async (topicName) => {
     const topics = await this.admin.listTopics();
     if (topics.includes(topicName)) {
-      console.log(
-        `Skipping topic creation, ${process.env.KAFKA_TOPIC_NAME} already exists`
-      );
+      console.log(`Skipping topic creation, '${process.env.KAFKA_TOPIC_NAME}' already exists`);
       return;
     }
     await this.admin.createTopics({ topics: [{ topic: topicName }] });
   };
 
   connect = async () => {
-    if (!this.instance) {
-      this.init();
-    }
+    this.init();
     this.admin = this.instance.admin();
     await this.admin.connect();
+    await this.createTopic(process.env.KAFKA_TOPIC_NAME);
     this.producer = this.instance.producer();
   };
 }
