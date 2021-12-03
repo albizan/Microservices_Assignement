@@ -4,5 +4,7 @@ CREATE TABLE "book"
 (
     id character varying primary key,
     author character varying,
-    title character varying
+    title character varying,
+    total integer,
+    borrowed integer
 );
