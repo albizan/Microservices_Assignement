@@ -16,7 +16,9 @@ fastify.post("/book", {
 
 fastify.put("/book/:id", {
   handler: updateBookController,
-  schema: bookSchema,
+  schema: {
+    body: bookSchema,
+  },
 });
 
 fastify.delete("/book/:id", deleteBookController);
