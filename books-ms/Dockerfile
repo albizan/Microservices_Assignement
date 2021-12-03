@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:16-alpine
 
 # Create server directory
 WORKDIR /usr/src/server
@@ -13,5 +13,7 @@ RUN npm ci --only=production
 COPY . .
 
 EXPOSE 8081 
+
+USER node
 
 CMD [ "node", "index.js" ]
