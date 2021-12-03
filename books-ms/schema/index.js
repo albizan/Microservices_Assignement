@@ -7,8 +7,14 @@ const bookSchema = {
     title: {
       type: "string",
     },
+    total: {
+      type: "integer",
+    },
+    borrowed: {
+      type: "integer",
+    },
   },
-  required: ["author", "title"],
+  required: ["author", "title", "total", "borrowed"],
 };
 
 module.exports = { bookSchema };
