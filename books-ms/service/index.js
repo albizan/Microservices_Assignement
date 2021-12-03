@@ -50,8 +50,8 @@ const updateBook = async (id, updateBookDTO) => {
 
 const deleteBook = async (id) => {
   try {
-    await db("book").where({ id }).del();
-    logger.info("Deleted book with id: " + id);
+    const result = await db("book").where({ id }).del();
+    logger.info("Delete request, deleted books: " + result);
   } catch (error) {
     console.error(error);
   }
