@@ -54,7 +54,7 @@ services:
       NODE_ENV: production
       SERVER_PORT: 8082
       DB_HOST: customers_db
-      DB_PORT: 5433
+      DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: customer
