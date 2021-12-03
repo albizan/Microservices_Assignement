@@ -1,4 +1,3 @@
 node_modules
-postgres_data
-mongodb_data
 .env
+data/
