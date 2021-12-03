@@ -8,7 +8,7 @@ services:
       - "5432:5432"
     volumes:
       - ./data/books_db:/var/lib/postgresql/data
-      - ./utils/init-book.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - ./utils/init-books_db.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -21,7 +21,7 @@ services:
       - "5433:5432"
     volumes:
       - ./data/customers_db:/var/lib/postgresql/data
-      - ./utils/init-customers.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - ./utils/init-customers_db.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     restart: always
     environment:
       POSTGRES_USER: postgres
