@@ -1,76 +1,72 @@
-version: "3.7"
-
-# DEFINE ALL SERVICES
+version: "3.9"
 services:
-  # RELATIONAL DATABASE
-  postgres_db:
-    image: postgres:latest
-    container_name: book-database
+  # Databases
+  books_db:
+    image: postgres:12-alpine
+    container_name: books-database
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - ./data/books_db:/var/lib/postgresql/data
       - ./utils/init-book.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: book
+  customers_db:
+    image: postgres:12-alpine
+    container_name: customers-database
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/customers_db:/var/lib/postgresql/data
+      - ./utils/init-customers.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: customer
 
-  # Book Microservice
-  book-ms:
-    image: book-ms
+  # Microservices
+  books-ms:
+    image: books-ms
     environment:
       NODE_ENV: production
       SERVER_PORT: 8081
-      DB_HOST: postgres_db
+      DB_HOST: books_db
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: book
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092,kafka2:9092,kafka3:9092
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_TOPIC_NAME: notify
-    container_name: book-ms
+    container_name: books-ms
     ports:
       - "8081:8081"
     depends_on:
-      - postgres_db
+      - books_db
       - zookeeper
       - kafka
-      - kafka2
-      - kafka3
-
-  # MongoDB
-  mongo_db:
-    image: mongo:latest
-    container_name: customer-mongodb
+  customers-ms:
+    image: customers-ms
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-      MONGO_INITDB_DATABASE: customer_db
-    ports:
-      - 27017:27017
-    volumes:
-      - ./mongodb_data:/data/db
-
-  # Customer Microservice
-  customer-ms:
-    image: customer-ms
-    environment:
-      NODE_ENV: development
+      NODE_ENV: production
       SERVER_PORT: 8082
-      MONGO_URI: mongodb://root:root@mongo_db:27017
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092,kafka2:9092,kafka3:9092
-      KAFKA_TOPIC_NAME: customer-ms
-    container_name: customer-ms
+      DB_HOST: customers_db
+      DB_PORT: 5433
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: customer
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC_NAME: notify
+    container_name: customers-ms
     ports:
       - "8082:8082"
     depends_on:
-      - mongo_db
+      - customers_db
       - zookeeper
       - kafka
-      - kafka2
-      - kafka3
 
   # Kafka config
   zookeeper:
@@ -93,32 +89,4 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       # kafka have to talk with other containers (kafka name) and also from my local environment (localhost)
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://localhost:19092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
-
-  kafka2:
-    image: confluentinc/cp-kafka
-    container_name: kafka2
-    ports:
-      - "19093:19093"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      # kafka have to talk with other containers (kafka name) and also from my local environment (localhost)
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092,CONNECTIONS_FROM_HOST://localhost:19093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
-
-  kafka3:
-    image: confluentinc/cp-kafka
-    container_name: kafka3
-    ports:
-      - "19094:19094"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 3
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      # kafka have to talk with other containers (kafka name) and also from my local environment (localhost)
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092,CONNECTIONS_FROM_HOST://localhost:19094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
