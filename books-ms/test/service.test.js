@@ -12,20 +12,22 @@ describe("Test CRUD operations", () => {
   test("Test getBooks method", async () => {
     const result = await getBooks();
     expect(result.length).toBe(3);
-    expect(result[0]).toEqual({ id: "1", author: "Autore 1", title: "Libro 1" });
-    expect(result[1]).toEqual({ id: "2", author: "Autore 2", title: "Libro 2" });
-    expect(result[2]).toEqual({ id: "3", author: "Autore 3", title: "Libro 3" });
+    expect(result[0]).toEqual({ id: "1", author: "Autore 1", title: "Libro 1", total: 1, borrowed: 1 });
+    expect(result[1]).toEqual({ id: "2", author: "Autore 2", title: "Libro 2", total: 34, borrowed: 12 });
+    expect(result[2]).toEqual({ id: "3", author: "Autore 3", title: "Libro 3", total: 5, borrowed: 2 });
   });
 
   test("Test getBook method", async () => {
     const result = await getBook("3");
-    expect(result).toEqual({ id: "3", author: "Autore 3", title: "Libro 3" });
+    expect(result).toEqual({ id: "3", author: "Autore 3", title: "Libro 3", total: 5, borrowed: 2 });
   });
 
   test("Test createBook method", async () => {
     const mockBook = {
       author: "Autore 4",
       title: "Libro 4",
+      total: 4,
+      borrowed: 0,
     };
     const book = await createBook(mockBook);
     expect(typeof book.id).toBe("string");

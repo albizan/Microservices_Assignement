@@ -3,6 +3,8 @@ exports.up = function (knex, Promise) {
     table.string("id").notNullable();
     table.string("author").notNullable();
     table.string("title").notNullable();
+    table.integer("total").notNullable();
+    table.integer("borrowed").notNullable();
   });
 };
 
