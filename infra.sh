@@ -1,0 +1,1 @@
+docker-compose up -d zookeeper kafka books_db customers_db
