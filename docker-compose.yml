@@ -14,6 +14,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: book
+
   customers_db:
     image: postgres:12-alpine
     container_name: customers-database
@@ -27,6 +28,18 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: customer
+
+  borrowings_db:
+    image: mongo:latest
+    container_name: borrowings_db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: borrowings_db
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/borrowings_db:/data/db
 
   # Microservices
   books-ms:

@@ -1,0 +1,29 @@
+{
+  "name": "borrowing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf /dist && tsc --outDir dist",
+    "dev": "nodemon src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^3.5.0",
+    "axios": "^0.24.0",
+    "class-validator": "^0.13.2",
+    "dotenv": "^10.0.0",
+    "graphql": "^15.7.2",
+    "mongodb": "^4.2.1",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1",
+    "typedi": "^0.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0"
+  }
+}
