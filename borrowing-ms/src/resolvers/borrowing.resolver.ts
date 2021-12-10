@@ -11,8 +11,8 @@ class BorrowingResolver {
 
   @Query((returns) => [Borrowing])
   async borrowings(): Promise<Borrowing[]> {
-    // const books = await this.borrowingService.retriveAllBooks();
-    return null;
+    const borrowings = await this.borrowingService.getAllBorrowings();
+    return borrowings;
   }
   @Query((returns) => Borrowing)
   async borrowing(@Arg("id") id: string): Promise<Borrowing> {
