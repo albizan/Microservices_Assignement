@@ -48,6 +48,25 @@ class BorrowingService {
 
     return borrowing;
   }
+
+  async getAllBorrowings(): Promise<Borrowing[]> {
+    const borrowingsFromDB = await this.dataSource.getAllBorrowings();
+    const borrowings: Borrowing[] = [];
+    for (let b of borrowingsFromDB) {
+      const bookId = b.bookId;
+      const customerId = b.customerId;
+      const book = await this.bookService.retrieveBookById(bookId);
+      const customer = await this.customerService.retrieveCustomerById(customerId);
+
+      const borrowing = new Borrowing();
+      borrowing.mapFromModel(b);
+      borrowing.addBook(book);
+      borrowing.addCustomer(customer);
+      borrowings.push(borrowing);
+    }
+
+    return borrowings;
+  }
 }
 
 export default BorrowingService;
