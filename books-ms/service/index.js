@@ -25,17 +25,13 @@ const getBook = async (id) => {
 };
 
 const createBook = async (bookDTO) => {
-  try {
-    const newBook = {
-      id: uuidv4(),
-      ...bookDTO,
-    };
-    await db.insert(newBook).into("book");
-    logger.info("Created book with id: " + newBook.id);
-    return newBook;
-  } catch (error) {
-    console.error(error);
-  }
+  const newBook = {
+    id: uuidv4(),
+    ...bookDTO,
+  };
+  await db.insert(newBook).into("book");
+  logger.info("Created book with id: " + newBook.id);
+  return newBook;
 };
 
 const updateBook = async (id, updateBookDTO) => {
