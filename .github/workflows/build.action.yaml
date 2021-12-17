@@ -14,10 +14,11 @@ jobs:
       - name: Get branch
         id: get_branch
         run: echo ::set-output name=BRANCH::$(echo $GITHUB_REF | cut -d / -f 3)
-      - name: Build books-ms image and push to Docker HUB
       - name: Get the commit SHA
         id: get_commit_sha
         run: echo ::set-output name=COMMIT_SHA::$(git rev-parse --short "$GITHUB_SHA")
+
+      - name: Build books-ms image and push to Docker HUB
         uses: docker/build-push-action@v1.1.0
         with:
           path: books-ms/
