@@ -76,7 +76,7 @@ spec:
                   key: KAFKA_TOPIC_NAME
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: books-config-map
 metadata:
   name: envvar
   namespace: default

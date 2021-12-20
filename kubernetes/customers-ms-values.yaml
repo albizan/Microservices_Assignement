@@ -78,7 +78,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: envvar
+  name: customers-config-map
   namespace: default
 data:
   NODE_ENV: production
