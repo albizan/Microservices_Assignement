@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: borrowing-ms-deployment
+  labels:
+    app: borrowing-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: borrowing-ms
+  template:
+    metadata:
+      labels:
+        app: borrowing-ms
+    spec:
+      containers:
+        - name: borrowing-ms
+          image: albjzan/borrowing-ms:latest
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: borrowing-config-map
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: borrowing-config-map
+  namespace: default
+data:
+  BOOKS_MS_HOST: books-ms-service
+  BOOKS_MS_PORT: "8081"
+  CUSTOMERS_MS_HOST: customers-ms-service
+  CUSTOMERS_MS_PORT: "8081"
+  NODE_ENV: development
+  SERVER_PORT: "8081"
+  DB_URI: mongodb://root:root@borrowings-database:27017
+  KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  KAFKA_TOPIC_NAME: notify
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: borrowing-ms-service
+spec:
+  type: NodePort
+  selector:
+    app: borrowing-ms
+  ports:
+    - name: http
+      port: 8081
+      targetPort: 8081
