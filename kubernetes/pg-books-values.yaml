@@ -1,0 +1,26 @@
+---
+fullnameOverride: books-database
+global:
+  postgresql:
+    postgresqlUsername: postgres
+    postgresqlPassword: postgres
+initdbUser: postgres
+initdbPassword: postgres
+initdbScripts:
+  dbinit.sql: |
+    CREATE DATABASE "books" OWNER postgres;
+    \connect books
+    ALTER DATABASE "books" SET TIMEZONE TO 'Europe/Rome';
+    SET TIMEZONE TO 'Europe/Rome';
+
+    CREATE TABLE "book"
+    (
+        id character varying primary key,
+        author character varying,
+        title character varying,
+        total integer,
+        borrowed integer
+    );
+
+    ALTER TABLE "book"
+        OWNER to postgres;

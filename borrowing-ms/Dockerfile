@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:16-alpine
 
 # Create server directory
 WORKDIR /usr/src/server
@@ -8,10 +8,15 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm ci --only=production
+RUN npm install rimraf
 
 # Copy sorce code
 COPY . .
 
-EXPOSE 8082
+RUN npm run build
 
-CMD [ "node", "index.js" ]
+EXPOSE 8083
+
+USER node
+
+CMD [ "node", "dist/index.js" ]

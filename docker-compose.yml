@@ -43,7 +43,7 @@ services:
 
   # Microservices
   books-ms:
-    image: books-ms
+    image: albjzan/books-ms:1.0-SNAPSHOT
     environment:
       NODE_ENV: production
       SERVER_PORT: 8081
@@ -62,7 +62,7 @@ services:
       - zookeeper
       - kafka
   customers-ms:
-    image: customers-ms
+    image: albjzan/customers-ms:1.0-SNAPSHOT
     environment:
       NODE_ENV: production
       SERVER_PORT: 8082
@@ -78,6 +78,27 @@ services:
       - "8082:8082"
     depends_on:
       - customers_db
+      - zookeeper
+      - kafka
+  borrowing-ms:
+    image: albjzan/borrowing-ms:1.0-SNAPSHOT
+    environment:
+      BOOKS_MS_HOST: books-ms
+      BOOKS_MS_PORT: 8081
+      CUSTOMERS_MS_HOST: customers-ms
+      CUSTOMERS_MS_PORT: 8082
+      NODE_ENV: development
+      SERVER_PORT: 8083
+      DB_URI: mongodb://root:root@borrowings_db:27017
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC_NAME: notify
+    container_name: borrowing-ms
+    ports:
+      - "8083:8083"
+    depends_on:
+      - borrowings_db
+      - customers-ms
+      - books-ms
       - zookeeper
       - kafka
 
