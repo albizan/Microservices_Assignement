@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId, Collection } from "mongodb";
+import { ObjectId } from "mongodb";
 
 class BorrowingEntity {
   _id: ObjectId;

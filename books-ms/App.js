@@ -15,7 +15,7 @@ class App {
       });
       logger.info(`Server listening on port ${process.env.SERVER_PORT}`);
     } catch (error) {
-      console.error(err);
+      console.error(error);
       process.exit(1);
     }
   }

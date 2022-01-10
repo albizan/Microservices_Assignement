@@ -1,1 +1,1 @@
-docker-compose up -d zookeeper kafka books_db customers_db
+docker-compose up -d zookeeper kafka books_db customers_db borrowings_db
