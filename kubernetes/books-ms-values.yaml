@@ -20,65 +20,14 @@ spec:
           image: albjzan/books-ms:latest
           ports:
             - containerPort: 8081
-          env:
-            - name: NODE_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: NODE_ENV
-
-            - name: SERVER_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: SERVER_PORT
-
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: DB_HOST
-
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: DB_PORT
-
-            - name: DB_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: DB_USER
-
-            - name: DB_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: DB_PASSWORD
-
-            - name: DB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: DB_DATABASE
-
-            - name: KAFKA_BOOTSTRAP_SERVERS
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: KAFKA_BOOTSTRAP_SERVERS
-
-            - name: KAFKA_TOPIC_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: envvar
-                  key: KAFKA_TOPIC_NAME
+          envFrom:
+            - configMapRef:
+                name: books-config-map
 ---
 apiVersion: v1
-kind: books-config-map
+kind: ConfigMap
 metadata:
-  name: envvar
+  name: books-config-map
   namespace: default
 data:
   NODE_ENV: production
