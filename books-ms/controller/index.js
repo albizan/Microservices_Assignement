@@ -1,10 +1,11 @@
 const { getBooks, getBook, createBook, updateBook, deleteBook } = require("../service");
 const kafka = require("../kafka");
+const logger = require("../logger");
 
 const getBooksController = async (_, reply) => {
   try {
     // Retreive all book from service
-    const allBooks = (await getBooks()) || [];
+    const allBooks = await getBooks();
 
     // Send retreived dato to client
     reply.statusCode = 200;
@@ -17,6 +18,7 @@ const getBooksController = async (_, reply) => {
       messages: [{ value: `${rows.length} books retreived with a GET /book` }],
     });
   } catch (error) {
+    logger.error("GET /book -> " + error.message);
     reply.statusCode = 500;
     reply.send();
   }
@@ -34,6 +36,7 @@ const getBookController = async (request, reply) => {
       reply.send();
     }
   } catch (error) {
+    logger.error("GET /book/:id -> " + error.message);
     reply.statusCode = 500;
     reply.send();
   }
@@ -45,6 +48,7 @@ const postBookController = async (request, reply) => {
     reply.statusCode = 201;
     reply.send(result);
   } catch (error) {
+    logger.error("POST /book -> " + error.message);
     reply.statusCode = 500;
     reply.send();
   }
@@ -57,6 +61,7 @@ const updateBookController = async (request, reply) => {
     reply.statusCode = 200;
     reply.send({ affectedRows: affectedRows });
   } catch (error) {
+    logger.error("PUT /book/:id -> " + error.message);
     reply.statusCode = 500;
     reply.send();
   }
@@ -69,6 +74,7 @@ const deleteBookController = async (request, reply) => {
     reply.statusCode = 204;
     reply.send();
   } catch (error) {
+    logger.error("DELETE /book -> " + error.message);
     reply.statusCode = 500;
     reply.send();
   }
