@@ -8,11 +8,8 @@ const getBooks = async () => {
 };
 
 const getBook = async (id) => {
+  logger.info(`GET /book/${id}`);
   const book = await db.select("*").from("book").where({ id }).first();
-  logger.info("Requested book with id: " + id);
-  if (!book) {
-    logger.info("Book with id " + id + " does not exist");
-  }
   return book;
 };
 
@@ -22,23 +19,20 @@ const createBook = async (bookDTO) => {
     ...bookDTO,
   };
   await db.insert(newBook).into("book");
-  logger.info("Created book with id: " + newBook.id);
+  logger.info(`New book created\n - id: ${newBook.id}\n - Title: ${newBook.title}\n - Author: ${newBook.author}`);
   return newBook;
 };
 
 const updateBook = async (id, updateBookDTO) => {
   const affectedRows = await db("book").where({ id }).update(updateBookDTO);
-  logger.info("Updated book with id: " + id);
+  logger.info(`Book updated\n - id: ${id}\n - Title: ${updateBookDTO.title}\n - Author: ${updateBookDTO.author}`);
   return affectedRows;
 };
 
 const deleteBook = async (id) => {
-  try {
-    const result = await db("book").where({ id }).del();
-    logger.info("Delete request, deleted books: " + result);
-  } catch (error) {
-    console.error(error);
-  }
+  logger.info(`DELETE /book/${id}`);
+  const result = await db("book").where({ id }).del();
+  return result;
 };
 
 module.exports = { getBooks, getBook, createBook, updateBook, deleteBook };
