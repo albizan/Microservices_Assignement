@@ -10,13 +10,6 @@ const getBooksController = async (_, reply) => {
     // Send retreived dato to client
     reply.statusCode = 200;
     reply.send(allBooks);
-
-    // Send notification on a kafka topic
-    await kafka.producer.connect();
-    await kafka.producer.send({
-      topic: process.env.KAFKA_TOPIC_NAME,
-      messages: [{ value: `${rows.length} books retreived with a GET /book` }],
-    });
   } catch (error) {
     logger.error("GET /book -> " + error.message);
     reply.statusCode = 500;
@@ -70,9 +63,9 @@ const updateBookController = async (request, reply) => {
 const deleteBookController = async (request, reply) => {
   try {
     const { id } = request.params;
-    await deleteBook(id);
+    const result = await deleteBook(id);
     reply.statusCode = 204;
-    reply.send();
+    reply.send(result);
   } catch (error) {
     logger.error("DELETE /book -> " + error.message);
     reply.statusCode = 500;
