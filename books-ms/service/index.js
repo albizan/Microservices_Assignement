@@ -1,9 +1,10 @@
 const db = require("../database");
 const { v4: uuidv4 } = require("uuid");
 const logger = require("../logger");
-
+const kafka = require("../kafka");
 const getBooks = async () => {
   const allBooks = await db.select("*").from("book");
+  logger.info(`GET /book`);
   return allBooks;
 };
 
@@ -19,7 +20,11 @@ const createBook = async (bookDTO) => {
     ...bookDTO,
   };
   await db.insert(newBook).into("book");
-  logger.info(`New book created\n - id: ${newBook.id}\n - Title: ${newBook.title}\n - Author: ${newBook.author}`);
+  const logString = `New book created\n - id: ${newBook.id}\n - Title: ${newBook.title}\n - Author: ${newBook.author}`;
+  logger.info(logString);
+
+  // Send notification via kafka
+  await kafka.publish(logString);
   return newBook;
 };
 
