@@ -20,7 +20,7 @@ class Kafka {
 
   async publish(message) {
     const dateOpts = { weekday: "long", month: "2-digit", day: "2-digit" };
-    await kafka.producer.send({
+    await this.producer.send({
       topic: process.env.KAFKA_TOPIC_NAME,
       messages: [{ value: `[${new Date().toLocaleDateString("it-IT", dateOpts)}] - ${message}` }],
     });
