@@ -1,11 +1,16 @@
+const { resolve } = require("path");
 const validator = require("validator");
 const db = require("../database");
+const kafka = require("../kafka");
 const { getBooks, getBook, createBook, updateBook, deleteBook } = require("../service");
 
 beforeAll(async () => {
   // run the migrations and do any other setup here
   await db.migrate.latest();
   await db.seed.run();
+
+  require("dotenv").config({ path: resolve(__dirname, "../.env") });
+  await kafka.connect();
 });
 
 describe("Test CRUD operations", () => {
@@ -70,5 +75,7 @@ describe("Test CRUD operations", () => {
 afterAll((done) => {
   // Closing the DB connection allows Jest to exit successfully.
   db.destroy();
+  kafka.producer.disconnect();
+  kafka.admin.disconnect();
   done();
 });
