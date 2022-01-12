@@ -2,6 +2,7 @@ const db = require("../database");
 const { v4: uuidv4 } = require("uuid");
 const logger = require("../logger");
 const kafka = require("../kafka");
+
 const getBooks = async () => {
   const allBooks = await db.select("*").from("book");
   logger.info(`GET /book`);
@@ -30,13 +31,21 @@ const createBook = async (bookDTO) => {
 
 const updateBook = async (id, updateBookDTO) => {
   const affectedRows = await db("book").where({ id }).update(updateBookDTO);
-  logger.info(`Book updated\n - id: ${id}\n - Title: ${updateBookDTO.title}\n - Author: ${updateBookDTO.author}`);
+  const logString = `Book updated\n - id: ${id}\n - Title: ${updateBookDTO.title}\n - Author: ${updateBookDTO.author}`;
+  logger.info(logString);
+
+  // Send notification via kafka
+  await kafka.publish(logString);
   return affectedRows;
 };
 
 const deleteBook = async (id) => {
-  logger.info(`DELETE /book/${id}`);
+  const logString = `DELETE /book/${id}`;
+  logger.info(logString);
   const result = await db("book").where({ id }).del();
+
+  // Send notification via kafka
+  await kafka.publish(logString);
   return result;
 };
 
