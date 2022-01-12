@@ -18,13 +18,13 @@ class Kafka {
     }
   };
 
-  async publish(message) {
+  publish = async (message) => {
     const dateOpts = { weekday: "long", month: "2-digit", day: "2-digit" };
     await this.producer.send({
       topic: process.env.KAFKA_TOPIC_NAME,
       messages: [{ value: `[${new Date().toLocaleDateString("it-IT", dateOpts)}] - ${message}` }],
     });
-  }
+  };
 
   createTopic = async (topicName) => {
     const topics = await this.admin.listTopics();
