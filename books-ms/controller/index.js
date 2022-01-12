@@ -1,5 +1,4 @@
 const { getBooks, getBook, createBook, updateBook, deleteBook } = require("../service");
-const kafka = require("../kafka");
 const logger = require("../logger");
 
 const getBooksController = async (_, reply) => {
