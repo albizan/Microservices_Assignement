@@ -43,7 +43,7 @@ services:
 
   # Microservices
   books-ms:
-    image: albjzan/books-ms:1.0-SNAPSHOT
+    image: albjzan/books-ms:latest
     environment:
       NODE_ENV: production
       SERVER_PORT: 8081
@@ -62,7 +62,7 @@ services:
       - zookeeper
       - kafka
   customers-ms:
-    image: albjzan/customers-ms:1.0-SNAPSHOT
+    image: albjzan/customers-ms:latest
     environment:
       NODE_ENV: production
       SERVER_PORT: 8082
@@ -81,7 +81,7 @@ services:
       - zookeeper
       - kafka
   borrowing-ms:
-    image: albjzan/borrowing-ms:1.0-SNAPSHOT
+    image: albjzan/borrowing-ms:latest
     environment:
       BOOKS_MS_HOST: books-ms
       BOOKS_MS_PORT: 8081
@@ -121,6 +121,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      # kafka have to talk with other containers (kafka name) and also from my local environment (localhost)
+      # kafka needs to be reached from localhost (localhost:19092) and from other container (kafka:9092)
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,CONNECTIONS_FROM_HOST://localhost:19092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
