@@ -101,6 +101,20 @@ services:
       - books-ms
       - zookeeper
       - kafka
+  notifier-ms:
+    image: albjzan/notifier-ms:latest
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC_NAME: notify
+      BOT_TOKEN: 5071390558:AAHMvN9IYT84kI5vAoUVzDZC_ONf9Zeef1E
+      TELEGRAM_ID: 144088919
+    container_name: notifier-ms
+    depends_on:
+      - borrowing-ms
+      - customers-ms
+      - books-ms
+      - zookeeper
+      - kafka
 
   # Kafka config
   zookeeper:
