@@ -1,1 +1,1 @@
-![Diagram](./blob/main/diagram.png?raw=true "Diagram")
+![Diagram](./diagram.png?raw=true "Diagram")
